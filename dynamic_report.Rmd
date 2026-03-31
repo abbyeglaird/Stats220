@@ -85,7 +85,7 @@ latest_data <- logged_data %>%
 
 summary_stats <- latest_data %>%
   summarise(
-    mean_time = (sum(commute_time) / length(commute_time)),
+    mean_time = round((sum(commute_time) / length(commute_time)), 2)
     min_time = min(commute_time),
     max_time = max(commute_time),
     sum_time = sum(commute_time),
