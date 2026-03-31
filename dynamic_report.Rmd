@@ -1,0 +1,120 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+body {
+  background-color: #ffffff;
+  color: #004d99;
+  font-family: Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, serif;
+  font-weight: bold;
+  color: #004d99;
+}
+
+h1 {
+  font-size: 2.2rem;
+  border-bottom: 2px solid #004d99;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.section-break {
+  border: none;
+  border-top: 1px solid #c5cae9;
+  margin: 3rem 0;
+}
+
+p {
+  color: #0a0f2c;
+}
+
+pre {
+  background-color: #f0f2fa !important;
+  border-left: 3px solid #0a0f2c;
+  border-radius: 4px;
+  padding: 1.2rem;
+  color: #0a0f2c;
+}
+
+code {
+  color: #0a0f2c;
+  background-color: #f0f2fa;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+}
+
+img {
+  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  margin: 1.5rem 0;
+}
+```
+
+## What's going on with this data?
+This dynamic report explores commuting patterns of University of Auckland students travelling to and from the City Campus. The survey recorded three key aspects of each student’s commute. The time of the commute (in minutes), the mode of transport used (e.g. bus, walking, car), and the time of day the commute occurred.
+
+The purpose of the analysis was to follow students commuting habits, such as which transport methods are most commonly used, how commute times vary between transport modes, and when students are most likely to travel. 
+
+These insights can provide outlook on the University of Auckland student experience, and provide useful data for planning transportation systems. 
+
+```{r}
+library(tidyverse)
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSjvIdycUef0JjFxVVQ93KdgXDv_Rz3GY9-6BgYe0vJgn6E3ZRHicGBmJ2V10S3soL6_1c7IiddBw5/pub?output=csv")
+
+latest_data <- logged_data %>%
+  rename(transport_mode = 2,
+         commute_time = 3,
+         time_day = 4)
+
+summary_stats <- latest_data %>%
+  summarise(
+    mean_time = (sum(commute_time) / length(commute_time)),
+    min_time = min(commute_time),
+    max_time = max(commute_time),
+    sum_time = sum(commute_time),
+    )
+
+```
+<hr class="section-break">
+
+On average, UoA students spend `r summary_stats$mean_time` minutes travelling to City campus. 
+The shortest commute recorded is `r summary_stats$min_time` minutes, while the longest is `r summary_stats$max_time` minutes.
+Overall, the students spent `r summary_stats$sum_time` minutes total travelling. 
+
+<hr class="section-break">
+```{r}
+  
+latest_data %>%
+  ggplot() +
+  geom_bar(aes(x= transport_mode, fill = transport_mode)) +
+  labs(title = "Students commutes by transport mode",
+       x = "Transport Mode",
+       y = "Count")
+      
+latest_data %>%
+  ggplot() +
+  geom_bar(aes(y = time_day), fill = "#ff1a75") +
+  labs(title = "What time do students travel to and from UoA City Campus?",
+       x = "Number of commutes recorded",
+       y = "Time of day")
+
+```
+
+
