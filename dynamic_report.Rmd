@@ -37,7 +37,9 @@ h1 {
 .section-break {
   border: none;
   border-top: 20px solid #c5cae9;
+  height: 30px;
   margin: 3rem 0;
+  background-color:#c5cae9;
 }
 
 p {
