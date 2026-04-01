@@ -36,7 +36,7 @@ h1 {
 
 .section-break {
   border: none;
-  border-top: 1px solid #c5cae9;
+  border-top: 20px solid #c5cae9;
   margin: 3rem 0;
 }
 
